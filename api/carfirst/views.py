@@ -4,7 +4,7 @@ from carfirst.carfirst_bidding_aggregator import bidding_aggregator
 from carfirst.auction_processor import auction_processor
 
 
-allowed_slots = [(700, 830), (930, 1050), (1200, 1330)]
+allowed_slots = [(700, 830), (930, 1050), (1230, 1330)]
 
 
 def download_upcoming_auctions(request: HttpRequest):
@@ -27,7 +27,7 @@ def download_upcoming_auctions(request: HttpRequest):
 def download_live_auctions(request: HttpRequest):
     try:
         now = datetime.now(tz=timezone.utc)
-        time = int(f"{now.hour}{now.minute}")
+        time = int(now.strftime("%H%M"))
         slots = [slot for slot in allowed_slots if time > slot[0] and time < slot[1]]
         if len(slots) == 0:
             return JsonResponse(
