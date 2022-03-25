@@ -1,6 +1,10 @@
+from datetime import datetime, timezone
 from django.http import HttpRequest, JsonResponse
 from carfirst.carfirst_bidding_aggregator import bidding_aggregator
 from carfirst.auction_processor import auction_processor
+
+
+allowed_slots = [(700, 830), (930, 1050), (1200, 1330)]
 
 
 def download_upcoming_auctions(request: HttpRequest):
@@ -22,12 +26,20 @@ def download_upcoming_auctions(request: HttpRequest):
 
 def download_live_auctions(request: HttpRequest):
     try:
+        now = datetime.now(tz=timezone.utc)
+        time = int(f"{now.hour}{now.minute}")
+        slots = [slot for slot in allowed_slots if time > slot[0] and time < slot[1]]
+        if len(slots) == 0:
+            return JsonResponse(
+                {"success": False, "message": "Request is outside allowed time slots."}
+            )
         bidding_aggregator.fetch_live_auctions()
         return JsonResponse(
             {"success": True, "message": "Live auctions downloaded successfully."}
         )
     except Exception as ex:
         exception_message = str(ex)
+        print(ex)
         return JsonResponse(
             {
                 "success": False,
