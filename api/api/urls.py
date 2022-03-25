@@ -15,7 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
+from api.views import get_status
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("carfirst/", include("carfirst.urls")),
+    path(
+        "status",
+        get_status,
+        name="api_status",
+    ),
 ]

@@ -4,7 +4,7 @@ import json
 import os
 from typing import Any, Dict, Text
 import urllib.parse
-from services.exceptions import AuctionRequestException
+from carfirst.exceptions import AuctionRequestException
 from utils.curl_util import exec_curl
 
 
@@ -12,9 +12,9 @@ class BiddingAggregator:
     """Calls Carfirst dealer API to aggregate bidding results."""
 
     def __init__(self) -> None:
-        auth_token = os.environ.get("AUTH_TOKEN")
+        auth_token = os.environ.get("CARFIRST_AUTH_TOKEN")
         if not auth_token:
-            raise ValueError("AUTH_TOKEN not found in env vars.")
+            raise ValueError("CARFIRST_AUTH_TOKEN not found in env vars.")
         self._current_auth_token = auth_token
 
     def fetch_upcoming_auctions(self):
@@ -30,7 +30,7 @@ class BiddingAggregator:
                 raise HTTPException(
                     f"API request failed with response {response_body}."
                 )
-            self._store_response(job_id, response_body)
+            self._store_response("upcoming_auctions", job_id, response_body)
         except Exception as ex:
             raise AuctionRequestException(str(ex))
 
@@ -47,7 +47,7 @@ class BiddingAggregator:
                 raise HTTPException(
                     f"API request failed with response {response_body}."
                 )
-            self._store_response(job_id, response_body)
+            self._store_response("live_auctions", job_id, response_body)
         except Exception as ex:
             raise AuctionRequestException(str(ex))
 
@@ -107,10 +107,18 @@ class BiddingAggregator:
         )
         return command
 
-    def _store_response(self, job_id: Text, data: Text):
+    def _store_response(self, job_type: Text, job_id: Text, data: Text):
         """Stores response based on the job_id in a json file."""
         json_data: Dict[Text, Any] = json.loads(data)
         if json_data.get("total") == 0:
             return
-        with open(f"data/{job_id}.json", "w") as file:
+
+        path = f"data/{job_type}/unprocessed/{job_id}.json"
+        directory = os.path.split(path)[0]
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        with open(path, "w") as file:
             file.write(data)
+
+
+bidding_aggregator = BiddingAggregator()
