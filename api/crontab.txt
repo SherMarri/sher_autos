@@ -1,5 +1,5 @@
 * * * * 1-6 curl localhost:8000/carfirst/download_live_auctions
-*/10 * * * 1-6 curl localhost:8000/carfirst/download_upcoming_auctions
+*/10 6-14 * * 1-6 curl localhost:8000/carfirst/download_upcoming_auctions
 
 */5 * * * 1-6 curl localhost:8000/carfirst/process_upcoming_auctions
 */5 * * * 1-6 curl localhost:8000/carfirst/process_live_auctions
