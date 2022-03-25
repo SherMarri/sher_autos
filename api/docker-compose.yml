@@ -27,23 +27,23 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - autos_db
-  # autos_jlab:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #   container_name: "autos_jlab"
-  #   env_file: .env
-  #   environment:
-  #     DEBUG: "1"
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - type: bind
-  #       source: .
-  #       target: /app
-  #   command: python manage.py runserver 0.0.0.0:8000
-  #   depends_on:
-  #     - autos_db
+  autos_jlab:
+    build:
+      context: .
+      dockerfile: ./DockerfileJlab
+    container_name: "autos_jlab"
+    env_file: .env
+    environment:
+      DEBUG: "1"
+    ports:
+      - "8888:8888"
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    command: jupyter lab --allow-root --no-browser --ip=0.0.0.0
+    depends_on:
+      - autos_db
 
 volumes:
   autos_postgres_data:
