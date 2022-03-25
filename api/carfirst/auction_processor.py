@@ -65,6 +65,7 @@ class AuctionProcessor:
         }
 
         new_auctions: List[Auction] = []
+        updates = 0
         for auction_dict in auctions:
             if auction_dict["id"] not in auction_ids_to_update:
                 new_auction = self._create_auction(auction_dict)
@@ -73,12 +74,14 @@ class AuctionProcessor:
                 self._update_auction(
                     auction_ids_to_update[auction_dict["id"]], auction_dict
                 )
+                updates += 1
 
             bids: List[Any] = auction_dict.get("bids", [])
             if len(bids) > 0:
                 self._process_bids(auction_dict)
 
         print(f"Processed {len(new_auctions)} auctions.")
+        print(f"Updated {updates} auctions.")
 
         if len(new_auctions) > 0:
             Auction.objects.bulk_create(new_auctions)
