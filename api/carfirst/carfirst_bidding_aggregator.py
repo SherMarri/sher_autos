@@ -65,7 +65,7 @@ class BiddingAggregator:
 
         command = (
             (
-                """curl 'https://dealer.carfirst.com/dealer-api/auctions\?filter=%%FILTER%%&order_by=start-desc&offset=0&segment=%%SEGMENT%%&screen=%%SCREEN%%&count=12' \
+                """curl 'https://dealer.carfirst.com/dealer-api/auctions\?filter=%%FILTER%%&order_by=start-desc&offset=0&segment=%%SEGMENT%%&screen=%%SCREEN%%&count=100' \
                 -H 'User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:97.0) Gecko/20100101 Firefox/97.0' \
                 -H 'Accept: */*' \
                 -H 'Accept-Language: en-US,en;q=0.5' \
