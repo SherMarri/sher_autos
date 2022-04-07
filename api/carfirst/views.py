@@ -4,7 +4,7 @@ from carfirst.carfirst_bidding_aggregator import bidding_aggregator
 from carfirst.auction_processor import auction_processor
 
 
-allowed_slots = [(700, 805), (915, 1020), (1100, 1145)]
+allowed_slots = [(700, 815), (915, 1025), (1100, 1200)]
 
 
 def download_upcoming_auctions(request: HttpRequest):
